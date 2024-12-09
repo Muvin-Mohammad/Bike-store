@@ -1,4 +1,4 @@
-import { z, ZodError } from 'zod';
+import { z } from 'zod';
 
 export const bikeValidationSchema = z.object({
   name: z.string({
@@ -29,9 +29,9 @@ export const bikeValidationSchema = z.object({
   }),
 });
 
-export const handleZodError = (error: ZodError) => {
+export const handleZodError = (error: any) => {
   return {
-    issues: error.errors.map((err) => ({
+    issues: error.errors.map((err: any) => ({
       message: err.message,
       code: err.code,
       path: err.path,
@@ -39,6 +39,7 @@ export const handleZodError = (error: ZodError) => {
       ...(err.code === 'invalid_enum_value' && { options: err.options }),
       ...(err.received && { received: err.received }),
     })),
+
     stack: error.stack || 'No stack trace available',
   };
 };

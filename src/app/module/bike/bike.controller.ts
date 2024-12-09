@@ -1,39 +1,32 @@
 import { Request, Response } from 'express';
-import { ZodError } from 'zod';
+
 import { BikeServices } from './bike.service';
 import { bikeValidationSchema, handleZodError } from './bike.zod.validation';
 
 const createBike = async (req: Request, res: Response) => {
   try {
     const zodParsedData = bikeValidationSchema.parse(req.body);
+
     const result = await BikeServices.createBikeIntoDB(zodParsedData);
 
     res.status(200).json({
-      message: 'Bike created successfully',
+      message: 'Bike  created succesfully',
       success: true,
       data: result,
     });
-  } catch (err) {
-    if (err instanceof ZodError) {
-      res.status(400).json({
-        message: 'Validation failed',
-        success: false,
-        error: handleZodError(err),
-      });
-    } else {
-      res.status(500).json({
-        message: 'Something went wrong',
-        success: false,
-        error: err,
-      });
-    }
+  } catch (err: any) {
+    res.status(500).json({
+      message: 'Validation failed',
+      success: false,
+      error: handleZodError(err),
+    });
   }
 };
 
 const getAllBikes = async (req: Request, res: Response) => {
   try {
     const { searchTerm } = req.query;
-    const filter: Record<string, unknown> = {};
+    const filter: any = {};
 
     if (searchTerm) {
       filter.$or = [
@@ -45,14 +38,14 @@ const getAllBikes = async (req: Request, res: Response) => {
     const result = await BikeServices.getAllBikesFromDB(filter);
 
     res.status(200).json({
-      message: 'Bikes retrieved successfully',
+      message: 'Bikes retrieved succesfully',
       status: true,
       data: result,
     });
-  } catch (err) {
+  } catch (err: any) {
     res.status(500).json({
       status: false,
-      message: err instanceof Error ? err.message : 'Something went wrong',
+      message: err.message || 'something went wrong',
       error: err,
     });
   }
@@ -61,23 +54,22 @@ const getAllBikes = async (req: Request, res: Response) => {
 const getSingleBike = async (req: Request, res: Response) => {
   try {
     const { bikeId } = req.params;
-    const result = await BikeServices.getSingleBikeFromDB(bikeId);
 
+    const result = await BikeServices.getSingleBikeFromDB(bikeId);
     if (!result) {
-      return res.status(404).json({
+      res.status(404).json({
         message: 'Bike not found',
         status: false,
       });
     }
-
     res.status(200).json({
-      message: 'Bike retrieved successfully',
+      message: 'Bkies retrieved succesfully',
       status: true,
       data: result,
     });
-  } catch (err) {
+  } catch (err: any) {
     res.status(500).json({
-      message: err instanceof Error ? err.message : 'Something went wrong',
+      message: err.message || 'something went wrong',
       status: false,
       error: err,
     });
@@ -89,54 +81,49 @@ const updateBike = async (req: Request, res: Response) => {
     const { bikeId } = req.params;
     const updateData = req.body;
     const result = await BikeServices.updateBikeIntoDB(bikeId, updateData);
-
     if (!result) {
-      return res.status(404).json({
-        message: 'Updated bike ID not found',
+      res.status(404).json({
+        message: 'updated bike id not found',
         status: false,
       });
     }
-
     res.status(200).json({
       message: 'Bike updated successfully',
       status: true,
       data: result,
     });
-  } catch (err) {
+  } catch (err: any) {
     res.status(400).json({
       status: false,
-      message: err instanceof Error ? err.message : 'Something went wrong',
+      message: err.message || 'something went wrong',
       error: err,
     });
   }
 };
-
 const deleteBike = async (req: Request, res: Response) => {
   try {
     const { bikeId } = req.params;
-    const result = await BikeServices.deleteBikeFromDB(bikeId);
 
+    const result = await BikeServices.deleteBikeFromDB(bikeId);
     if (!result) {
-      return res.status(404).json({
-        message: 'Deleted bike ID not found',
+      res.status(404).json({
+        message: 'deleted bike id not found',
         status: false,
       });
     }
-
     res.status(200).json({
-      message: 'Bike deleted successfully',
+      message: 'Bike  deleted succesfully',
       status: true,
       data: {},
     });
-  } catch (err) {
+  } catch (err: any) {
     res.status(500).json({
-      message: err instanceof Error ? err.message : 'Something went wrong',
+      message: err.message || 'something went wrong',
       status: false,
       error: err,
     });
   }
 };
-
 export const BikeControllers = {
   createBike,
   getAllBikes,

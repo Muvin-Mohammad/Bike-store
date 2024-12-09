@@ -1,7 +1,7 @@
-<!-- Assignment 2 - Bike Store API -->
+<!-- Assignment 2 - Bike Store  -->
 This project is a TypeScript-driven Node.js application that utilizes Express.js for building a robust server-side API. It integrates MongoDB with Mongoose to provide a seamless database solution. The API focuses on managing bikes and orders, while offering features like inventory control, revenue calculations, and efficient data handling.
 
-<!-- Key Features -->
+<!-- ///Key Features/// -->
 <!-- Bike Management -->
 <!-- CRUD Operations:  -->
 Create, read, update, and delete bikes in the database.
@@ -38,8 +38,8 @@ bash
 Copy code
 git clone <repository-url>  
 cd assignment-2  
-Install dependencies:
 
+Install dependencies:
 bash
 Copy code
 npm install  
@@ -61,3 +61,6 @@ Web Framework: Express.js
 Database: MongoDB with Mongoose
 Validation Library: Zod
 Environment Management: dotenv
+
+
+Inspect:https://bike-store-self.vercel.app/

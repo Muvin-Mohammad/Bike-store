@@ -3,7 +3,7 @@ import { OrderServices } from './order.service';
 import { orderValidationSchema } from './order.zod.validation';
 import { Types } from 'mongoose';
 
-const createOrder = async (req: Request, res: Response): Promise<void> => {
+const createOrder = async (req: Request, res: Response) => {
   try {
     const parsedData = orderValidationSchema.parse(req.body);
 
@@ -11,24 +11,21 @@ const createOrder = async (req: Request, res: Response): Promise<void> => {
       ...parsedData,
       product: new Types.ObjectId(parsedData.product),
     };
-
     const result = await OrderServices.createOrderIntoDB(orderData);
-
     res.status(201).json({
       message: 'Order created successfully',
       status: true,
       data: result,
     });
-  } catch (err) {
+  } catch (err: any) {
     res.status(400).json({
-      message: (err as Error).message || 'Validation failed',
+      message: err.message || 'Validation failed',
       status: false,
       error: err,
     });
   }
 };
-
-const getRevenue = async (_req: Request, res: Response): Promise<void> => {
+const getRevenue = async (_req: Request, res: Response) => {
   try {
     const totalRevenue = await OrderServices.calculateRevenue();
 
@@ -37,9 +34,9 @@ const getRevenue = async (_req: Request, res: Response): Promise<void> => {
       status: true,
       data: { totalRevenue },
     });
-  } catch (err) {
+  } catch (err: any) {
     res.status(500).json({
-      message: (err as Error).message || 'Failed to calculate revenue',
+      message: err.message || 'Failed to calculate revenue',
       status: false,
       error: err,
     });
